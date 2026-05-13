@@ -2,8 +2,10 @@ package org.roshan;
 
 public class Validation {
     public static boolean isValidISBN(String isbn) {
-        if (isbn == null) return false;
-        String cleaned = isbn.replaceAll("-", "");
-        return cleaned.matches("\\d{10}|\\d{13}");
+        return isbn != null && isbn.matches("\\d{13}");
+    }
+
+    public static boolean isValidId(String id) {
+        return id != null && id.matches("\\d{6}");
     }
 }

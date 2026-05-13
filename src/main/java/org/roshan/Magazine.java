@@ -17,4 +17,9 @@ public class Magazine extends Item {
         this.publisher = publisher;
         this.issueNumber = issueNumber;
     }
+
+    @Override
+    public int getBorrowLimit() {
+        return 1;
+    }
 }
