@@ -33,6 +33,15 @@ public abstract class User implements Sortable {
         return true;
     }
 
+    public boolean returnItem(Item item) throws Exception {
+        boolean removed = borrowedItems.remove(item);
+        if (!removed) {
+            throw new Exception("Item '" + item.getTitle() + "' not found in " + name + "'s list.");
+        }
+        item.returnItem();
+        return true;
+    }
+
     @Override
     public int compareTo(Object other) {
         if (other instanceof User otherUser) {
