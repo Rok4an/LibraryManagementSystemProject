@@ -1,5 +1,6 @@
 package org.roshan;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,11 +8,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 
 public abstract class Item implements Sortable {
     protected String id;
     protected String title;
-    @Setter protected ItemStatus status;
+    protected ItemStatus status;
     private static int nextId = 1;
 
     public Item(String title, ItemStatus status) {
@@ -20,6 +22,10 @@ public abstract class Item implements Sortable {
         this.status = status;
     }
 
+    /**
+     * Borrows this item if it is available.
+     * @throws Exception if the item is not available
+     */
     public boolean borrowItem() throws Exception {
         if (this.status != ItemStatus.AVAILABLE) {
             throw new Exception("Item " + title + " is not available. Status: " + status);
@@ -28,6 +34,10 @@ public abstract class Item implements Sortable {
         return true;
     }
 
+    /**
+     * Returns this item if it is currently borrowed.
+     * @throws Exception if the item is not currently borrowed
+     */
     public boolean returnItem() throws Exception {
         if (this.status != ItemStatus.BORROWED) {
             throw new Exception("Item " + title + " is not currently borrowed.");

@@ -14,16 +14,16 @@ public class Book extends Item {
     private String title;
     private Genre genre;
 
-    public Book(String title, ItemStatus status, String isbn, String author, Genre genre) throws Exception {
+    public Book(String title, ItemStatus status, String isbn, String author, Genre genre)
+            throws InvalidISBNException {
         super(title, status);
         if (!Validation.isValidISBN(isbn)) {
-            throw new Exception("Invalid ISBN: " + isbn);
+            throw new InvalidISBNException("Invalid ISBN: " + isbn);
         }
         this.isbn = isbn;
         this.author = author;
         this.genre = genre;
     }
-
     @Override
     public int getBorrowLimit() {
         return 1;

@@ -8,13 +8,13 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-
+@EqualsAndHashCode
 public abstract class User implements Sortable {
     protected String userId;
     protected String name;
     protected List<Item> borrowedItems = new ArrayList<>();
     protected Gender gender;
-    private static int nextId = 1;
+    protected static int nextId = 1;
 
     public User(String name, Gender gender) {
         this.userId = String.format("%06d", nextId++);
