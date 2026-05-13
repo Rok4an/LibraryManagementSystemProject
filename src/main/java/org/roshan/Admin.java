@@ -15,7 +15,7 @@ public class Admin extends User implements Reportable {
     private Library library;
 
     public Admin(String name, List<Item> borrowedItems, Gender gender, String adminId, Library library) {
-        super(name, borrowedItems, gender);
+        super(name, gender);
         this.adminId = adminId;
         this.library = library;
     }
