@@ -34,6 +34,14 @@ public abstract class Item implements Sortable {
 
     public abstract int getBorrowLimit();
 
+    @Override
+    public int compareTo(Object other) {
+        if (other instanceof Item otherItem) {
+            return this.title.compareToIgnoreCase(otherItem.getTitle());
+        }
+        return 0;
+    }
+
     public enum ItemStatus {
         AVAILABLE,
         BORROWED,
