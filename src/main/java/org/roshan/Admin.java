@@ -12,17 +12,27 @@ import java.util.List;
 
 public class Admin extends User implements Reportable {
     private String  adminId;
-    private Library library;
 
-    public Admin(String name, List<Item> borrowedItems, Gender gender, String adminId, Library library) {
+    public Admin(String name, Gender gender)
+            throws InvalidNameException, InvalidIdException {
         super(name, gender);
-        this.adminId = adminId;
-        this.library = library;
+
+        this.adminId = String.format("%06d", nextId++);
+        this.userId = "A" + this.adminId;
+
+        if (!Validation.isValidUniqueId(this.userId)) {
+            throw new InvalidIdException("Invalid admin ID: " + this.userId);
+        }
     }
 
     @Override
-    protected int getBorrowingLimit() {
+    protected int getBorrowLimit() {
         return Integer.MAX_VALUE;
+    }
+
+    @Override
+    protected void validateBorrow(Item item) {
+        // Can borrow any item
     }
 
     @Override
