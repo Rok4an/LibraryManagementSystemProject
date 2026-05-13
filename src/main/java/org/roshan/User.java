@@ -12,14 +12,13 @@ import java.util.List;
 public abstract class User implements Sortable {
     protected String userId;
     protected String name;
-    protected List<Item> borrowedItems;
+    protected List<Item> borrowedItems = new ArrayList<>();
     protected Gender gender;
     private static int nextId = 1;
 
-    public User(String name, List<Item> borrowedItems, Gender gender) {
+    public User(String name, Gender gender) {
         this.userId = String.format("%06d", nextId++);
         this.name = name;
-        this.borrowedItems = new ArrayList<>();
         this.gender = gender;
     }
 

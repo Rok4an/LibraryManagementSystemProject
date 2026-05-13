@@ -13,8 +13,11 @@ import java.util.List;
 public class Student extends User {
     private String studentId;
 
-    public Student(String name, List<Item> borrowedItems, Gender gender, String studentId) {
-        super(name, borrowedItems, gender);
+    public Student(String name, Gender gender, String studentId) throws Exception {
+        super(name, gender);
+        if (!Validation.isValidId(studentId)) {
+            throw new Exception("Invalid student ID: " + studentId);
+        }
         this.studentId = studentId;
     }
 }
