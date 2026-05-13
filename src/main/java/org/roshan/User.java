@@ -17,7 +17,7 @@ public abstract class User implements Sortable {
     private static int nextId = 1;
 
     public User(String name, List<Item> borrowedItems, Gender gender) {
-        this.userId = String.format("%04d", nextId++);
+        this.userId = String.format("%06d", nextId++);
         this.name = name;
         this.borrowedItems = new ArrayList<>();
         this.gender = gender;
@@ -55,12 +55,28 @@ public abstract class User implements Sortable {
 
     @Override
     public int compareTo(Object other) {
-        if (other instanceof User otherUser) {
-            return this.name.compareToIgnoreCase(otherUser.getName());
-        }
-        return 0;
-    }
+        if (!(other instanceof User u)) return 0;
 
+        if (this instanceof Student && u instanceof Student) {
+            Student s1 = (Student) this;
+            Student s2 = (Student) u;
+            return s1.getStudentId().compareToIgnoreCase(s2.getStudentId());
+        }
+
+        if (this instanceof Teacher && u instanceof Teacher) {
+            Teacher t1 = (Teacher) this;
+            Teacher t2 = (Teacher) u;
+            return t1.getEmployeeId().compareToIgnoreCase(t2.getEmployeeId());
+        }
+
+        if (this instanceof Admin && u instanceof Admin) {
+            Admin a1 = (Admin) this;
+            Admin a2 = (Admin) u;
+            return a1.getAdminId().compareToIgnoreCase(a2.getAdminId());
+        }
+
+        return this.name.compareToIgnoreCase(u.getName());
+    }
 
     public enum Gender {
         MALE,
