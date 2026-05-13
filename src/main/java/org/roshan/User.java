@@ -16,8 +16,19 @@ public abstract class User implements Sortable {
     protected Gender gender;
     protected static int nextId = 1;
 
-    public User(String name, Gender gender) {
-        this.userId = String.format("%06d", nextId++);
+    public User(String name, Gender gender, String prefix)
+            throws InvalidNameException, InvalidIdException {
+
+        if (!Validation.isValidName(name)) {
+            throw new InvalidNameException("Invalid name: " + name);
+        }
+
+        this.userId = prefix + String.format("%06d", nextId++);
+
+        if (!Validation.isValidUniqueId(this.userId)) {
+            throw new InvalidIdException("Generated ID is invalid: " + this.userId);
+        }
+
         this.name = name;
         this.gender = gender;
     }
