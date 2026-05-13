@@ -12,10 +12,14 @@ public class Magazine extends Item {
     private int issueNumber;
     private String publisher;
 
-    public Magazine(String title, ItemStatus status, String publisher, int issueNumber) {
+    public Magazine(String title, ItemStatus status, int issueNumber, String publisher)
+            throws InvalidIdException {
         super(title, status);
-        this.publisher = publisher;
+        if (!Validation.isValidIssueId(issueNumber)) {
+            throw new InvalidIdException("Invalid issue number: " + issueNumber);
+        }
         this.issueNumber = issueNumber;
+        this.publisher = publisher;
     }
 
     @Override
