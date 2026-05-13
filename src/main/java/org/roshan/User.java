@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 @ToString
 @EqualsAndHashCode
+
 public abstract class User implements Sortable {
     protected String userId;
     protected String name;
@@ -16,19 +17,10 @@ public abstract class User implements Sortable {
     protected Gender gender;
     protected static int nextId = 1;
 
-    public User(String name, Gender gender, String prefix)
-            throws InvalidNameException, InvalidIdException {
-
+    public User(String name, Gender gender) throws InvalidNameException {
         if (!Validation.isValidName(name)) {
             throw new InvalidNameException("Invalid name: " + name);
         }
-
-        this.userId = prefix + String.format("%06d", nextId++);
-
-        if (!Validation.isValidUniqueId(this.userId)) {
-            throw new InvalidIdException("Generated ID is invalid: " + this.userId);
-        }
-
         this.name = name;
         this.gender = gender;
     }
@@ -37,6 +29,15 @@ public abstract class User implements Sortable {
 
     protected abstract int getBorrowLimit();
 
+    /**
+     * Borrows the given item for this user if allowed.
+     * @param item the item to borrow
+     * @return true if the borrowing succeeds
+     * @throws BorrowLimitExceededException if the user reached the borrowing limit
+     * @throws ItemNotAvailableException if the item is not available
+     * @throws ForbiddenItemException if the user is not allowed to borrow this item type
+     * @throws Exception if validation fails for other reasons
+     */
     public boolean borrow(Item item)
             throws BorrowLimitExceededException,
             ItemNotAvailableException,
@@ -54,15 +55,28 @@ public abstract class User implements Sortable {
         return true;
     }
 
-    public boolean returnItem(Item item) throws Exception {
-        boolean removed = borrowedItems.remove(item);
-        if (!removed) {
-            throw new Exception("Item '" + item.getTitle() + "' not found in " + name + "'s list.");
+    /**
+     * Returns the given item for this user if it was borrowed.
+     * @param item the item to return
+     * @return true if the return succeeds
+     * @throws ItemNotBorrowedException if the user did not borrow the item
+     */
+    public boolean returnItem(Item item) throws ItemNotBorrowedException {
+        if (!borrowedItems.contains(item)) {
+            throw new ItemNotBorrowedException(
+                    "User '" + name + "' did not borrow item '" + item.getTitle() + "'.");
         }
         item.returnItem();
+        borrowedItems.remove(item);
         return true;
     }
 
+    /**
+     * Searches for a borrowed item whose title contains the query.
+     *
+     * @param query the text to search for
+     * @return the first matching item, or null if none found
+     */
     public Item searchItem(String query) {
         return borrowedItems.stream()
                 .filter(i -> i.getTitle().toLowerCase().contains(query.toLowerCase()))
