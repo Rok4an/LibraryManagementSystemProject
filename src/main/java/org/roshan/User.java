@@ -33,14 +33,22 @@ public abstract class User implements Sortable {
         this.gender = gender;
     }
 
-    protected abstract int getBorrowingLimit();
+    protected abstract void validateBorrow(Item item) throws Exception;
 
-    public boolean borrow(Item item) throws Exception {
-        if (borrowedItems.size() >= getBorrowingLimit()) {
-            throw new Exception("Borrow limit of " + getBorrowingLimit() + " reached for: " + name);
-        } if (this instanceof Student && !(item instanceof Book)) {
-            throw new Exception("Students can only borrow books. Got: " + item.getClass().getSimpleName());
+    protected abstract int getBorrowLimit();
+
+    public boolean borrow(Item item)
+            throws BorrowLimitExceededException,
+            ItemNotAvailableException,
+            ForbiddenItemException,
+            Exception {
+
+        if (borrowedItems.size() >= getBorrowLimit()) {
+            throw new BorrowLimitExceededException(name + " reached borrowing limit.");
         }
+
+        validateBorrow(item);
+
         item.borrowItem();
         borrowedItems.add(item);
         return true;

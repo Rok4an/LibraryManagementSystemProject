@@ -24,26 +24,26 @@ public abstract class Item implements Sortable {
 
     /**
      * Borrows this item if it is available.
-     * @throws Exception if the item is not available
+     * @throws ItemNotAvailableException if the item is not available
      */
-    public boolean borrowItem() throws Exception {
+    public void borrowItem() throws ItemNotAvailableException {
         if (this.status != ItemStatus.AVAILABLE) {
-            throw new Exception("Item " + title + " is not available. Status: " + status);
+            throw new ItemNotAvailableException(
+                    "Item '" + title + "' is not available. Status: " + status);
         }
         this.status = ItemStatus.BORROWED;
-        return true;
     }
 
     /**
      * Returns this item if it is currently borrowed.
-     * @throws Exception if the item is not currently borrowed
+     * @throws ItemNotBorrowedException if the item is not currently borrowed
      */
-    public boolean returnItem() throws Exception {
+    public void returnItem() throws ItemNotBorrowedException {
         if (this.status != ItemStatus.BORROWED) {
-            throw new Exception("Item " + title + " is not currently borrowed.");
+            throw new ItemNotBorrowedException(
+                    "Item '" + title + "' is not currently borrowed.");
         }
         this.status = ItemStatus.AVAILABLE;
-        return true;
     }
 
     public abstract int getBorrowLimit();
