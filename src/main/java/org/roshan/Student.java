@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString(callSuper = true)
+
 public class Student extends User {
     private String studentId;
 

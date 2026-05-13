@@ -7,6 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+
 public abstract class Item implements Sortable {
     protected String id;
     protected String title;

@@ -8,6 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+
 public abstract class User implements Sortable {
     protected String userId;
     protected String name;
