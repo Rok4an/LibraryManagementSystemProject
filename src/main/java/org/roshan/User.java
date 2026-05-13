@@ -42,6 +42,14 @@ public abstract class User implements Sortable {
         return true;
     }
 
+    public Item searchItem(String query) {
+        return borrowedItems.stream()
+                .filter(i -> i.getTitle().toLowerCase().contains(query.toLowerCase()))
+                .findFirst()
+                .orElse(null);
+    }
+
+
     @Override
     public int compareTo(Object other) {
         if (other instanceof User otherUser) {

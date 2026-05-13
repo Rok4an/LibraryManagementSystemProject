@@ -32,6 +32,8 @@ public abstract class Item implements Sortable {
         return true;
     }
 
+    public abstract int getBorrowLimit();
+
     public enum ItemStatus {
         AVAILABLE,
         BORROWED,
