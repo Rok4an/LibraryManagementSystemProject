@@ -1,5 +1,12 @@
 package org.roshan;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class Book extends Item {
     private String isbn;
     private String author;

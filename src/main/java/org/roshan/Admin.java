@@ -1,10 +1,14 @@
 package org.roshan;
 
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Getter
+@Setter
+@ToString(callSuper = true)
 public class Admin extends User implements Reportable {
     private String  adminId;
     private Library library;

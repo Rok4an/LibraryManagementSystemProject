@@ -2,8 +2,11 @@ package org.roshan;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
+@Setter
+@ToString
 public abstract class Item implements Sortable {
     protected String id;
     protected String title;
@@ -36,10 +39,27 @@ public abstract class Item implements Sortable {
 
     @Override
     public int compareTo(Object other) {
-        if (other instanceof Item otherItem) {
-            return this.title.compareToIgnoreCase(otherItem.getTitle());
+        if (!(other instanceof Item o)) return 0;
+
+        if (this instanceof Book && o instanceof Book) {
+            Book b1 = (Book) this;
+            Book b2 = (Book) o;
+            return b1.getAuthor().compareToIgnoreCase(b2.getAuthor());
         }
-        return 0;
+
+        if (this instanceof DVD && o instanceof DVD) {
+            DVD d1 = (DVD) this;
+            DVD d2 = (DVD) o;
+            return Integer.compare(d1.getDuration(), d2.getDuration());
+        }
+
+        if (this instanceof Magazine && o instanceof Magazine) {
+            Magazine m1 = (Magazine) this;
+            Magazine m2 = (Magazine) o;
+            return Integer.compare(m1.getIssueNumber(), m2.getIssueNumber());
+        }
+
+        return this.title.compareToIgnoreCase(o.getTitle());
     }
 
     public enum ItemStatus {
