@@ -2,6 +2,7 @@ package org.roshan;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,9 +16,16 @@ public abstract class User implements Sortable {
     public User(String name, List<Item> borrowedItems, Gender gender) {
         this.userId = String.format("%04d", nextId++);
         this.name = name;
-        this.borrowedItems = borrowedItems;
+        this.borrowedItems = new ArrayList<>();
         this.gender = gender;
     }
+
+    protected abstract int getBorrowingLimit();
+
+    public boolean borrow(Item item) throws Exception {
+        if (borrowedItems.size() >= getBorrowingLimit()) {
+            throw new Exception("Borrow limit of " + getBorrowingLimit() + " reached for: " + name);
+        }
 
     @Override
     public int compareTo(Object other) {
