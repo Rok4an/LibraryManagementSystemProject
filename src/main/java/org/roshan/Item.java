@@ -14,6 +14,14 @@ public abstract class Item implements Sortable {
         this.status = status;
     }
 
+    public boolean borrowItem() throws Exception {
+        if (this.status != ItemStatus.AVAILABLE) {
+            throw new Exception("Item '" + title + "' is not available. Status: " + status);
+        }
+        this.status = ItemStatus.BORROWED;
+        return true;
+    }
+
     public enum ItemStatus {
         AVAILABLE,
         BORROWED,

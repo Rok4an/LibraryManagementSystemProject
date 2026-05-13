@@ -25,7 +25,13 @@ public abstract class User implements Sortable {
     public boolean borrow(Item item) throws Exception {
         if (borrowedItems.size() >= getBorrowingLimit()) {
             throw new Exception("Borrow limit of " + getBorrowingLimit() + " reached for: " + name);
+        } if (this instanceof Student && !(item instanceof Book)) {
+            throw new Exception("Students can only borrow books. Got: " + item.getClass().getSimpleName());
         }
+        item.borrowItem();
+        borrowedItems.add(item);
+        return true;
+    }
 
     @Override
     public int compareTo(Object other) {
