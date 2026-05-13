@@ -39,7 +39,7 @@ public class Validation {
 
         /**
          * Checks if a system-generated unique ID is valid.
-         * Format: One uppercase letter + four digits (e.g., S0001).
+         * Format: One uppercase letter + six digits (e.g., S000001).
          * @param id the unique ID
          * @return true if the ID matches the required format, false otherwise
          */
