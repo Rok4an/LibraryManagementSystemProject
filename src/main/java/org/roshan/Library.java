@@ -89,4 +89,119 @@ public class Library {
 
         return items.remove(item);
     }
+
+    /**
+     * Loads items and users from CSV files into the library system.
+     */
+    public void loadData() {
+        items = new ArrayList<>();
+        users = new HashMap<>();
+
+        try {
+            // ITEMS
+            Scanner scanner = new Scanner(new File(Constant.ITEMS_CSV_PATH));
+            scanner.nextLine(); // header
+
+            while (scanner.hasNext()) {
+                String line = scanner.nextLine();
+                String[] element = line.split(",");
+
+                String id = element[0];
+                String type = element[1];
+                String title = element[2];
+                Item.ItemStatus status = Item.ItemStatus.valueOf(element[3]);
+
+                Item item = null;
+
+                if (type.equals("Book")) {
+                    String isbn = element[4];
+                    String author = element[5];
+                    Book.Genre genre = Book.Genre.valueOf(element[6]);
+                    item = new Book(title, status, isbn, genre, author);
+                } else if (type.equals("DVD")) {
+                    String director = element[4];
+                    int duration = Integer.parseInt(element[5]);
+                    item = new DVD(title, status, director, duration);
+                } else if (type.equals("Magazine")) {
+                    int issueNumber = Integer.parseInt(element[4]);
+                    String publisher = element[5];
+                    item = new Magazine(title, status, issueNumber, publisher);
+                }
+
+                if (item != null) {
+                    if (Validation.isValidId(id)) {
+                        item.setId(id);
+                        items.add(item);
+                    } else {
+                        System.out.println("Invalid item ID skipped: " + id);
+                    }
+                }
+            }
+
+            scanner.close();
+
+            // USERS
+            Scanner console = new Scanner(new File(Constant.USERS_CSV_PATH));
+            console.nextLine(); // header
+
+            while (console.hasNext()) {
+                String line = console.nextLine();
+                String[] data = line.split(",");
+
+                String id = data[0];
+                String role = data[1];
+                String name = data[2];
+                User.Gender gender = User.Gender.valueOf(data[3]);
+
+                List<Item> borrowedItem = new ArrayList<>();
+
+                if (data.length > 4 && !data[4].isBlank()) {
+                    String[] borrowedIds = data[4].split(";");
+                    for (int i = 0; i < borrowedIds.length; i++) {
+                        String borrowedId = borrowedIds[i];
+                        for (int j = 0; j < items.size(); j++) {
+                            Item item = items.get(j);
+                            if (item.getId().equals(borrowedId)) {
+                                borrowedItem.add(item);
+                            }
+                        }
+                    }
+                }
+
+                User user = null;
+
+                if (role.equals("STUDENT")) {
+                    Student s = new Student(name, gender);
+                    s.setBorrowedItems(borrowedItem);
+                    user = s;
+                } else if (role.equals("TEACHER")) {
+                    Teacher t = new Teacher(name, gender);
+                    t.setBorrowedItems(borrowedItem);
+                    user = t;
+                } else if (role.equals("ADMIN")) {
+                    Admin a = new Admin(name, gender);
+                    a.setBorrowedItems(borrowedItem);
+                    user = a;
+                } else {
+                    System.out.println("Invalid user type");
+                }
+
+                if (user != null) {
+                    if (Validation.isValidUniqueId(id)) {
+                        user.setUserId(id);
+                        users.put(id, user);
+                    } else {
+                        System.out.println("Invalid user ID skipped: " + id);
+                    }
+                }
+            }
+
+            console.close();
+
+            System.out.println("Data loaded successfully.");
+
+        } catch (IOException | InvalidNameException | InvalidIdException | InvalidISBNException e) {
+            System.out.println("Error loading data: " + e.getMessage());
+        }
+    }
 }
