@@ -204,4 +204,69 @@ public class Library {
             System.out.println("Error loading data: " + e.getMessage());
         }
     }
+
+    /**
+     * Saves all users and items back into CSV files.
+     * This method preserves system state for reloading.
+     */
+    public void backupData() {
+        try {
+            // ITEMS
+            FileWriter itemWriter = new FileWriter(Constant.ITEMS_CSV_PATH);
+            itemWriter.write("id,type,title,status,isbn/dir/issue,author/duration/publisher,genre\n");
+
+            for (int i = 0; i < items.size(); i++) {
+                Item item = items.get(i);
+                String type = item.getClass().getSimpleName();
+
+                if (item instanceof Book) {
+                    Book b = (Book) item;
+                    itemWriter.write(item.getId() + "," + type + "," + item.getTitle() + "," + item.getStatus() + ","
+                            + b.getIsbn() + "," + b.getAuthor() + "," + b.getGenre() + "\n");
+                } else if (item instanceof DVD) {
+                    DVD d = (DVD) item;
+                    itemWriter.write(item.getId() + "," + type + "," + item.getTitle() + "," + item.getStatus() + ","
+                            + d.getDirector() + "," + d.getDuration() + "\n");
+                } else if (item instanceof Magazine) {
+                    Magazine m = (Magazine) item;
+                    itemWriter.write(item.getId() + "," + type + "," + item.getTitle() + "," + item.getStatus() + ","
+                            + m.getIssueNumber() + "," + m.getPublisher() + "\n");
+                }
+            }
+
+            itemWriter.close();
+
+            // USERS
+            FileWriter userWriter = new FileWriter(Constant.USERS_CSV_PATH);
+            userWriter.write("id,role,name,gender,borrowedItems\n");
+
+            for (User user : users.values()) {
+                String role;
+                if (user instanceof Student) role = "STUDENT";
+                else if (user instanceof Teacher) role = "TEACHER";
+                else if (user instanceof Admin) role = "ADMIN";
+                else role = "UNKNOWN";
+
+                String borrowed = "";
+                List<Item> borrowedItems = user.getBorrowedItems();
+                for (int i = 0; i < borrowedItems.size(); i++) {
+                    Item item = borrowedItems.get(i);
+                    borrowed += item.getId();
+                    if (i < borrowedItems.size() - 1) {
+                        borrowed += ";";
+                    }
+                }
+
+                userWriter.write(user.getUserId() + "," + role + "," + user.getName() + ","
+                        + user.getGender() + "," + borrowed + "\n");
+            }
+
+            userWriter.close();
+
+            System.out.println("Backup completed successfully.");
+
+        } catch (IOException e) {
+            System.out.println("Error while backing up data: " + e.getMessage());
+        }
+    }
 }
