@@ -44,6 +44,6 @@ public class Validation {
          * @return true if the ID matches the required format, false otherwise
          */
         public static boolean isValidUniqueId(String id) {
-            return id != null && id.matches("[A-Z]\\d{6}");
+            return id != null && id.matches("[STA]\\d{6}");
         }
 }
