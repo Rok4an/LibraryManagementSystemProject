@@ -72,25 +72,31 @@ public abstract class User implements Sortable {
     public int compareTo(Object other) {
         if (!(other instanceof User u)) return 0;
 
-        if (this instanceof Student && u instanceof Student) {
-            Student s1 = (Student) this;
-            Student s2 = (Student) u;
-            return s1.getStudentId().compareToIgnoreCase(s2.getStudentId());
-        }
+        return switch (this) {
 
-        if (this instanceof Teacher && u instanceof Teacher) {
-            Teacher t1 = (Teacher) this;
-            Teacher t2 = (Teacher) u;
-            return t1.getTeacherId().compareToIgnoreCase(t2.getTeacherId());
-        }
+            case Student s1 -> {
+                if (u instanceof Student s2) {
+                    yield s1.getStudentId().compareToIgnoreCase(s2.getStudentId());
+                }
+                yield this.name.compareToIgnoreCase(u.getName());
+            }
 
-        if (this instanceof Admin && u instanceof Admin) {
-            Admin a1 = (Admin) this;
-            Admin a2 = (Admin) u;
-            return a1.getAdminId().compareToIgnoreCase(a2.getAdminId());
-        }
+            case Teacher t1 -> {
+                if (u instanceof Teacher t2) {
+                    yield t1.getTeacherId().compareToIgnoreCase(t2.getTeacherId());
+                }
+                yield this.name.compareToIgnoreCase(u.getName());
+            }
 
-        return this.name.compareToIgnoreCase(u.getName());
+            case Admin a1 -> {
+                if (u instanceof Admin a2) {
+                    yield a1.getAdminId().compareToIgnoreCase(a2.getAdminId());
+                }
+                yield this.name.compareToIgnoreCase(u.getName());
+            }
+
+            default -> this.name.compareToIgnoreCase(u.getName());
+        };
     }
 
     public enum Gender {

@@ -14,11 +14,13 @@ public abstract class Item implements Sortable {
     protected String title;
     protected ItemStatus status;
 
+    protected static int nextId = 1;
+
     public Item(String title, ItemStatus status) {
+        this.id = String.format("%06d", nextId++);
         this.title = title;
         this.status = status;
     }
-
     /**
      * Borrows this item if it is available.
      * @throws ItemNotAvailableException if the item is not available
@@ -56,19 +58,31 @@ public abstract class Item implements Sortable {
     public int compareTo(Object other) {
         if (!(other instanceof Item o)) return 0;
 
-        if (this instanceof Book b1 && o instanceof Book b2) {
-            return b1.getAuthor().compareToIgnoreCase(b2.getAuthor());
-        }
+        return switch (this) {
 
-        if (this instanceof DVD d1 && o instanceof DVD d2) {
-            return Integer.compare(d1.getDuration(), d2.getDuration());
-        }
+            case Book b1 -> {
+                if (o instanceof Book b2) {
+                    yield b1.getAuthor().compareToIgnoreCase(b2.getAuthor());
+                }
+                yield this.title.compareToIgnoreCase(o.getTitle());
+            }
 
-        if (this instanceof Magazine m1 && o instanceof Magazine m2) {
-            return Integer.compare(m1.getIssueNumber(), m2.getIssueNumber());
-        }
+            case DVD d1 -> {
+                if (o instanceof DVD d2) {
+                    yield Integer.compare(d1.getDuration(), d2.getDuration());
+                }
+                yield this.title.compareToIgnoreCase(o.getTitle());
+            }
 
-        return this.title.compareToIgnoreCase(o.getTitle());
+            case Magazine m1 -> {
+                if (o instanceof Magazine m2) {
+                    yield Integer.compare(m1.getIssueNumber(), m2.getIssueNumber());
+                }
+                yield this.title.compareToIgnoreCase(o.getTitle());
+            }
+
+            default -> this.title.compareToIgnoreCase(o.getTitle());
+        };
     }
 
     public enum ItemStatus {
