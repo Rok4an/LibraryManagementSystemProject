@@ -1,80 +1,92 @@
 package org.roshan;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 @Getter
 @Setter
 @ToString
-
+@EqualsAndHashCode
 public class Library {
-    private String name;
     private List<Item> items = new ArrayList<>();
-    private List<User> users = new ArrayList<>();
-
-    public Library(String name) {
-        this.name = name;
-    }
-
-    public void addItem(Item item){
-        items.add(item);
-    }
-
-    public boolean removeItem(Item item) {
-        return items.remove(item);
-    }
-
-    public void addUser(User user){
-        users.add(user);
-    }
-
-    public void sortItems() {
-        Collections.sort(items, Item::compareTo);
-    }
+    private Map<String, User> users = new HashMap<>();
 
     /**
-     * Searches for items whose titles contain the given query using streams.
-     * @param query the search query
-     * @return a list of matching items
+     * Recursively searches for items whose title contains the given query.
+     * @param query the keyword
+     * @param items the list of items
+     * @param index the index of the item
+     * @return a list of items matching the keyword
      */
-    public List<Item> searchByTitleStream(String query) {
-        String q = query.toLowerCase();
-        return items.stream()
-                .filter(i -> i.getTitle().toLowerCase().contains(q))
-                .toList();
-    }
-
-    /**
-     * Searches for items whose titles contain the given query using recursion.
-     * @param query the search query
-     * @param list the list of items to search
-     * @param index the current index in the list
-     * @return a list of matching items
-     */
-    public List<Item> searchByTitleRecursive(String query, List<Item> list, int index) {
+    public List<Item> searchRecursive(String query, List<Item> items, int index) {
         List<Item> result = new ArrayList<>();
-        searchByTitleRecursiveHelper(query.toLowerCase(), list, index, result);
+
+        if (items == null || index >= items.size()) {
+            return result;
+        }
+
+        Item currentItem = items.get(index);
+
+        if (currentItem.getTitle().toLowerCase().contains(query.toLowerCase())) {
+            result.add(currentItem);
+        }
+
+        result.addAll(searchRecursive(query, items, index + 1));
         return result;
     }
 
     /**
-     * Helper method for recursive title search.
-     * @param q the lowercase query
-     * @param list the list of items
-     * @param index the current index
-     * @param result the list to store matches
+     * Searches items using a keyword in the title.
+     * @param query the keyword
+     * @return list of matching items
      */
-    private void searchByTitleRecursiveHelper(String q, List<Item> list, int index, List<Item> result) {
-        if (index >= list.size()) return;
-        Item it = list.get(index);
-        if (it.getTitle().toLowerCase().contains(q)) {
-            result.add(it);
+    public List<Item> searchStream(String query) {
+        if (query == null || query.isEmpty()) {
+            return List.of();
         }
-        searchByTitleRecursiveHelper(q, list, index + 1, result);
+
+        String keyword = query.toLowerCase();
+
+        return items.stream()
+                .filter(item -> item.getTitle().toLowerCase().contains(keyword))
+                .toList();
+    }
+
+    /**
+     * Adds an item to the library.
+     * @param item the item to add
+     * @return true if the item was added, false otherwise
+     */
+    public boolean add(Item item) {
+        if (item == null) {
+            return false;
+        }
+
+        if (!Validation.isValidId(item.getId())) {
+            System.out.println("Invalid item ID");
+            return false;
+        }
+
+        return items.add(item);
+    }
+
+    /**
+     * Removes an item from the library.
+     * @param item the item to remove
+     * @return true if the item was removed, false otherwise
+     */
+    public boolean remove(Item item) {
+        if (item == null) {
+            return false;
+        }
+
+        return items.remove(item);
     }
 }
