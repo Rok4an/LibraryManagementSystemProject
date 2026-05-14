@@ -9,15 +9,12 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode
-
 public abstract class Item implements Sortable {
     protected String id;
     protected String title;
     protected ItemStatus status;
-    private static int nextId = 1;
 
     public Item(String title, ItemStatus status) {
-        this.id = String.format("%06d", nextId++);
         this.title = title;
         this.status = status;
     }
@@ -46,27 +43,28 @@ public abstract class Item implements Sortable {
         this.status = ItemStatus.AVAILABLE;
     }
 
+    /**
+     * Marks this item as lost.
+     */
+    public void markLost() {
+        this.status = ItemStatus.LOST;
+    }
+
     public abstract int getBorrowLimit();
 
     @Override
     public int compareTo(Object other) {
         if (!(other instanceof Item o)) return 0;
 
-        if (this instanceof Book && o instanceof Book) {
-            Book b1 = (Book) this;
-            Book b2 = (Book) o;
+        if (this instanceof Book b1 && o instanceof Book b2) {
             return b1.getAuthor().compareToIgnoreCase(b2.getAuthor());
         }
 
-        if (this instanceof DVD && o instanceof DVD) {
-            DVD d1 = (DVD) this;
-            DVD d2 = (DVD) o;
+        if (this instanceof DVD d1 && o instanceof DVD d2) {
             return Integer.compare(d1.getDuration(), d2.getDuration());
         }
 
-        if (this instanceof Magazine && o instanceof Magazine) {
-            Magazine m1 = (Magazine) this;
-            Magazine m2 = (Magazine) o;
+        if (this instanceof Magazine m1 && o instanceof Magazine m2) {
             return Integer.compare(m1.getIssueNumber(), m2.getIssueNumber());
         }
 

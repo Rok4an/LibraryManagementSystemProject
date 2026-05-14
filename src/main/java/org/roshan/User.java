@@ -1,6 +1,9 @@
 package org.roshan;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +12,12 @@ import java.util.List;
 @Setter
 @ToString
 @EqualsAndHashCode
-
 public abstract class User implements Sortable {
     protected String userId;
     protected String name;
-    protected List<Item> borrowedItems = new ArrayList<>();
     protected Gender gender;
+    protected List<Item> borrowedItems = new ArrayList<>();
+
     protected static int nextId = 1;
 
     public User(String name, Gender gender) throws InvalidNameException {
@@ -25,24 +28,16 @@ public abstract class User implements Sortable {
         this.gender = gender;
     }
 
-    protected abstract void validateBorrow(Item item) throws Exception;
-
-    protected abstract int getBorrowLimit();
-
     /**
-     * Borrows the given item for this user if allowed.
+     * Borrows an item if allowed and available.
      * @param item the item to borrow
-     * @return true if the borrowing succeeds
-     * @throws BorrowLimitExceededException if the user reached the borrowing limit
-     * @throws ItemNotAvailableException if the item is not available
-     * @throws ForbiddenItemException if the user is not allowed to borrow this item type
-     * @throws Exception if validation fails for other reasons
+     * @throws BorrowLimitExceededException if user reached borrowing limit
+     * @throws ItemNotAvailableException    if item is not available
      */
-    public boolean borrow(Item item)
-            throws BorrowLimitExceededException,
-            ItemNotAvailableException,
-            ForbiddenItemException,
-            Exception {
+    public void borrowItem(Item item)
+            throws BorrowLimitExceededException, ItemNotAvailableException {
+
+        if (item == null) return;
 
         if (borrowedItems.size() >= getBorrowLimit()) {
             throw new BorrowLimitExceededException(name + " reached borrowing limit.");
@@ -52,38 +47,26 @@ public abstract class User implements Sortable {
 
         item.borrowItem();
         borrowedItems.add(item);
-        return true;
     }
 
     /**
-     * Returns the given item for this user if it was borrowed.
+     * Returns an item if it was borrowed by this user.
      * @param item the item to return
-     * @return true if the return succeeds
-     * @throws ItemNotBorrowedException if the user did not borrow the item
+     * @throws ItemNotBorrowedException if user did not borrow the item
      */
-    public boolean returnItem(Item item) throws ItemNotBorrowedException {
-        if (!borrowedItems.contains(item)) {
+    public void returnItem(Item item) throws ItemNotBorrowedException {
+        if (item == null || !borrowedItems.contains(item)) {
             throw new ItemNotBorrowedException(
-                    "User '" + name + "' did not borrow item '" + item.getTitle() + "'.");
+                    "User '" + name + "' did not borrow item '" +
+                            (item != null ? item.getTitle() : "null") + "'.");
         }
         item.returnItem();
         borrowedItems.remove(item);
-        return true;
     }
 
-    /**
-     * Searches for a borrowed item whose title contains the query.
-     *
-     * @param query the text to search for
-     * @return the first matching item, or null if none found
-     */
-    public Item searchItem(String query) {
-        return borrowedItems.stream()
-                .filter(i -> i.getTitle().toLowerCase().contains(query.toLowerCase()))
-                .findFirst()
-                .orElse(null);
-    }
+    protected abstract void validateBorrow(Item item);
 
+    public abstract int getBorrowLimit();
 
     @Override
     public int compareTo(Object other) {
@@ -98,7 +81,7 @@ public abstract class User implements Sortable {
         if (this instanceof Teacher && u instanceof Teacher) {
             Teacher t1 = (Teacher) this;
             Teacher t2 = (Teacher) u;
-            return t1.getEmployeeId().compareToIgnoreCase(t2.getEmployeeId());
+            return t1.getTeacherId().compareToIgnoreCase(t2.getTeacherId());
         }
 
         if (this instanceof Admin && u instanceof Admin) {
