@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-
     static Library library = new Library();
     static Scanner scanner = new Scanner(System.in);
 
@@ -32,10 +31,6 @@ public class Main {
             }
         }
     }
-
-    // ─────────────────────────────────────────
-    // MENUS
-    // ─────────────────────────────────────────
 
     private static void printMainMenu() {
         System.out.println("\n===== MAIN MENU =====");
@@ -66,13 +61,11 @@ public class Main {
             results = library.searchRecursive(keyword, library.getItems(), 0);
         }
 
-        // Deduplicate by title as required
         List<Item> deduplicated = results.stream()
                 .filter(item -> results.stream()
                         .noneMatch(other -> other != item
                                 && other.getTitle().equalsIgnoreCase(item.getTitle())))
                 .toList();
-        // simpler: just keep first occurrence per title
         List<String> seen = new java.util.ArrayList<>();
         List<Item> unique = new java.util.ArrayList<>();
         for (Item item : results) {
@@ -160,7 +153,6 @@ public class Main {
     private static void adminMenu() {
         System.out.println("\n===== ADMIN MENU =====");
 
-        // Find an admin user
         Admin admin = null;
         for (User user : library.getUsers().values()) {
             if (user instanceof Admin a) {
@@ -245,10 +237,6 @@ public class Main {
             System.out.println("Could not remove item.");
         }
     }
-
-    // ─────────────────────────────────────────
-    // HELPERS
-    // ─────────────────────────────────────────
 
     /**
      * Prints all users and lets the operator pick one by number.

@@ -1,3 +1,4 @@
+id,type,title,status,isbn/dir/issue,author/duration/publisher,genre
 000001,Book,The Hobbit,AVAILABLE,9780547928227,J.R.R. Tolkien,FANTASY
 000002,DVD,Inception,BORROWED,Christopher Nolan,148
 000003,Magazine,National Geographic,LOST,202,National Geographic Society
