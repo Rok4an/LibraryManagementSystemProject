@@ -4,3 +4,5 @@ id,type,title,status,isbn/dir/issue,author/duration/publisher,genre
 000003,Magazine,National Geographic,LOST,202,National Geographic Society
 000004,Book,Atomic Habits,AVAILABLE,9780735211292,James Clear,SELF_HELP
 000005,DVD,Interstellar,AVAILABLE,Christopher Nolan,169
+000006,DVD,Oppenheimer 2,AVAILABLE,Christopher Nolan,180
+000007,Magazine,Time,AVAILABLE,201,Time USA

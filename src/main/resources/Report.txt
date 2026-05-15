@@ -1,0 +1,25 @@
+The Library Management System is a Java console application that I built to see how a real library works. The Library Management System lets users borrow items return items and search for items. The Library Management System also lets admins generate reports and save everything to CSV files.
+
+I built the Library Management System using Maven. I tried to follow object-oriented principles much as possible throughout the project. I put everything into one package called `org.roshan`. The `org.roshan` package holds all my classes, interfaces, utilities and custom exceptions.
+
+For the class structure I made `Item` a class. The `Book` `DVD` and `Magazine` classes all extend the `Item` class. I did the same with `User`. The `Student` `Teacher` and `Admin` classes all extend the `User` class. My `Library` class is the class. The `Library` class keeps track of all items and users.
+
+I made a `Validation` class with methods to check inputs. I made a `class to store things like borrow limits and file paths. I also created two interfaces, `and `Reportable`. I created a set of custom exceptions. The custom exceptions are `InvalidISBNException` `InvalidNameException` `InvalidIdException` `ItemNotAvailableException` `ItemNotBorrowedException` `BorrowLimitExceededException` and `ForbiddenItemException`. These exceptions handle all the error cases cleanly.
+
+The Library Management System has three user roles. The three user roles are students, teachers and admins. Students can only borrow up to 5 books. Teachers can borrow up to 10 items of any type. Admins have no limit. Admins are the ones who can generate reports. Each user gets an ID. The ID has a prefix based on their role. For example students have an ID like `S000001`. Teachers have an ID like `T000002`. Admins have an ID like `A000003`.
+
+Each item has a status. The status can be `AVAILABLE` `BORROWED` or `LOST`. The Library Management System can have copies of the same title. The copies must have IDs. Borrowing checks both the users limit and the items availability. Borrowing throws the exception if something goes wrong. Returning an item sets its status back to `AVAILABLE`.
+
+The Library Management System has two search versions. One search version uses streams. It is called `searchStream`. The other search version uses recursion. It is called `searchRecursive`. Both search versions are case-insensitive. They search by title. The search versions do not show the title twice. This is even if there are copies.
+
+My `Admin` class implements the `interface. The `Admin` class prints out all items grouped by their status. The Library Management System has data persistence. I wrote `loadData()` to read from `items.csv` and `users.csv` at startup. The `loadData()` method rebuilds the system state. It includes which items each user has borrowed. I wrote `backupData()` to write everything to those files.
+
+The Library Management System has sorting. I implemented sorting through the `interface. Books by author. DVDs sort by duration. Magazines by issue number. If the itemsre different types they sort by title. Users by their ID within the same role. If the usersre different roles they sort by name.
+
+I wrote JUnit 5 tests. The tests are split across four classes. The `LibraryTest` class covers `add` `remove`. Both search methods. The `ItemTest` class covers borrowing, returning, marking lost and bad construction. The `UserTest` class covers all the borrow. Return logic for each role. It includes limit and exception cases. The `ValidationTest` class checks all five validation methods. I used the data from my CSV files in every test. This makes sure the tests reflect real system behavior.
+
+One thing that gave me trouble was the nextId` counter. The `nextId` counter is shared across all `Item` and `User` objects. When loading from CSV I had to override the auto-generated IDs using `setId()`. This was to match what was saved. In my tests I had to be careful about ID bleed between tests.
+
+Another challenge was making `validateBorrow()` abstract. This was so each subclass could enforce its borrowing rules. For example students cannot borrow DVDs or magazines. The parent `User` class does not need to know anything about item types. I think this was an use of polymorphism.
+
+Overall I am happy, with how the Library Management System turned out. The Library Management System covers all the features. The code is documented with Javadoc. Tested with JUnit.
