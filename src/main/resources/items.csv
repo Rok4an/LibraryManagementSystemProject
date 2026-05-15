@@ -1,16 +1,17 @@
 id,type,title,status,isbn/dir/issue,author/duration/publisher,genre
-000001,Book,The Hobbit,AVAILABLE,9780547928227,J.R.R. Tolkien,FANTASY
+000001,Book,The Hobbit,BORROWED,9780547928227,J.R.R. Tolkien,FANTASY
 000002,DVD,Inception,BORROWED,Christopher Nolan,148
 000003,Magazine,National Geographic,LOST,202,National Geographic Society
-000004,Book,Atomic Habits,AVAILABLE,9780735211292,James Clear,SELF_HELP
+000004,Book,Atomic Habits,BORROWED,9780735211292,James Clear,SELF_HELP
 000005,DVD,Interstellar,AVAILABLE,Christopher Nolan,169
 000006,DVD,Oppenheimer 2,AVAILABLE,Christopher Nolan,180
 000007,Magazine,Time,AVAILABLE,201,Time USA
 000008,Magazine,Time Line,AVAILABLE,204,Time USA
-000009,Book,Harry Potter,AVAILABLE,9780439708180,J.K. Rowling,FANTASY
+000009,Book,Harry Potter,LOST,9780439708180,J.K. Rowling,FANTASY
 000010,Book,The Alchemist,AVAILABLE,9780062315007,Paulo Coelho,SELF_HELP
 000011,Book,1984,AVAILABLE,9780451524935,George Orwell,THRILLER
 000012,Book,Dune,AVAILABLE,9780441013593,Frank Herbert,SCI_FI
 000013,Book,The Great Gatsby,AVAILABLE,9780743273565,F. Scott Fitzgerald,ROMANCE
 000014,Book,To Kill a Mockingbird,AVAILABLE,9780061935466,Harper Lee,BIOGRAPHY
 000015,Book,The Hunger Games,AVAILABLE,9780439023481,Suzanne Collins,THRILLER
+000016,Book,Benji The Gooner,AVAILABLE,6789123567462,Roshan,ROMANCE
