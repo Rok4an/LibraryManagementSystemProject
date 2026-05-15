@@ -30,7 +30,10 @@ public class Student extends User {
     }
 
     @Override
-    protected void validateBorrow(Item item) {
-        // Students can borrow any item type in this design
+    protected void validateBorrow(Item item) throws ForbiddenItemException {
+        if (!(item instanceof Book)) {
+            throw new ForbiddenItemException(
+                    "Students can only borrow books, not " + item.getClass().getSimpleName());
+        }
     }
 }

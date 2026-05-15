@@ -35,7 +35,7 @@ public abstract class User implements Sortable {
      * @throws ItemNotAvailableException    if item is not available
      */
     public void borrowItem(Item item)
-            throws BorrowLimitExceededException, ItemNotAvailableException {
+            throws BorrowLimitExceededException, ItemNotAvailableException, ForbiddenItemException {
 
         if (item == null) return;
 
@@ -64,7 +64,7 @@ public abstract class User implements Sortable {
         borrowedItems.remove(item);
     }
 
-    protected abstract void validateBorrow(Item item);
+    protected abstract void validateBorrow(Item item) throws ForbiddenItemException;
 
     public abstract int getBorrowLimit();
 
